@@ -38,7 +38,9 @@ radio.value = activityDoc.id;
 
 const label = document.createElement("label");
 label.appendChild(radio);
-label.append(" " + data.name);
+
+const text = document.createTextNode(" " + data.name);
+label.appendChild(text);
 
 div.appendChild(label);
 activitiesDiv.appendChild(div);
