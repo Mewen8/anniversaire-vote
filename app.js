@@ -26,24 +26,27 @@ async function loadActivities() {
 
     const snapshot = await getDocs(collection(db, "activities"));
 
-    snapshot.forEach((activityDoc) => {
-      const data = activityDoc.data();
+   snapshot.forEach((activityDoc) => {
+const data = activityDoc.data();
 
-      const div = document.createElement("div");
+const div = document.createElement("div");
+div.className = "activity";
 
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.name = "activity";
-      input.value = activityDoc.id;
+const radio = document.createElement("input");
+radio.type = "radio";
+radio.name = "activity";
+radio.value = activityDoc.id;
 
-      const label = document.createElement("label");
-      label.textContent = data.name;
+const label = document.createElement("label");
+label.appendChild(radio);
 
-      div.appendChild(input);
-      div.appendChild(label);
+const text = document.createTextNode(" " + data.name);
+label.appendChild(text);
 
-      activitiesDiv.appendChild(div);
-    });
+div.appendChild(label);
+activitiesDiv.appendChild(div);
+
+});
 
     statusDiv.textContent = "Choisis une activité puis vote.";
   } catch (error) {
