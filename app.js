@@ -1,4 +1,3 @@
-:::writing{variant="document" id="61482"}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
 getFirestore,
@@ -46,4 +45,3 @@ statusDiv.textContent = "Choisis une activité puis vote.";
 }
 
 loadActivities();
-:::
