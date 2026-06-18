@@ -1,17 +1,17 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-getFirestore,
-collection,
-getDocs
+  getFirestore,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
-authDomain: "activites-anniversaire.firebaseapp.com",
-projectId: "activites-anniversaire",
-storageBucket: "activites-anniversaire.firebasestorage.app",
-messagingSenderId: "613450740235",
-appId: "1:613450740235:web:c8c0d071afa6a045598d0e"
+  apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
+  authDomain: "activites-anniversaire.firebaseapp.com",
+  projectId: "activites-anniversaire",
+  storageBucket: "activites-anniversaire.firebasestorage.app",
+  messagingSenderId: "613450740235",
+  appId: "1:613450740235:web:c8c0d071afa6a045598d0e"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -21,33 +21,35 @@ const activitiesDiv = document.getElementById("activities");
 const statusDiv = document.getElementById("status");
 
 async function loadActivities() {
-activitiesDiv.innerHTML = "";
+  try {
+    activitiesDiv.innerHTML = "";
 
-const snapshot = await getDocs(collection(db, "activities"));
+    const snapshot = await getDocs(collection(db, "activities"));
 
-snapshot.forEach((activityDoc) => {
-const data = activityDoc.data();
+    snapshot.forEach((activityDoc) => {
+      const data = activityDoc.data();
 
-const div = document.createElement("div");
-div.className = "activity";
+      const div = document.createElement("div");
 
-const radio = document.createElement("input");
-radio.type = "radio";
-radio.name = "activity";
-radio.value = activityDoc.id;
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "activity";
+      input.value = activityDoc.id;
 
-const label = document.createElement("label");
-label.appendChild(radio);
+      const label = document.createElement("label");
+      label.textContent = data.name;
 
-const text = document.createTextNode(" " + data.name);
-label.appendChild(text);
+      div.appendChild(input);
+      div.appendChild(label);
 
-div.appendChild(label);
-activitiesDiv.appendChild(div);
+      activitiesDiv.appendChild(div);
+    });
 
-});
-
-statusDiv.textContent = "Choisis une activité puis vote.";
+    statusDiv.textContent = "Choisis une activité puis vote.";
+  } catch (error) {
+    console.error(error);
+    statusDiv.textContent = "Erreur : " + error.message;
+  }
 }
 
 loadActivities();
