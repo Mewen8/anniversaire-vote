@@ -1,3 +1,4 @@
+:::writing{variant="document" id="61482"}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
 getFirestore,
@@ -28,23 +29,21 @@ const snapshot = await getDocs(collection(db, "activities"));
 snapshot.forEach((doc) => {
 const data = doc.data();
 
-```
 const div = document.createElement("div");
 div.className = "activity";
 
 div.innerHTML = `
-  <label>
-    <input type="radio" name="activity" value="${doc.id}">
-    ${data.name}
-  </label>
+<label>
+<input type="radio" name="activity" value="${doc.id}">
+${data.name}
+</label>
 `;
 
 activitiesDiv.appendChild(div);
-```
-
 });
 
 statusDiv.textContent = "Choisis une activité puis vote.";
 }
 
 loadActivities();
+:::
