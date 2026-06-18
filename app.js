@@ -28,7 +28,6 @@ const snapshot = await getDocs(collection(db, "activities"));
 snapshot.forEach((activityDoc) => {
 const data = activityDoc.data();
 
-```
 const div = document.createElement("div");
 div.className = "activity";
 
@@ -43,7 +42,6 @@ label.append(" " + data.name);
 
 div.appendChild(label);
 activitiesDiv.appendChild(div);
-```
 
 });
 
