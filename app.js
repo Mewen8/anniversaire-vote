@@ -25,20 +25,26 @@ activitiesDiv.innerHTML = "";
 
 const snapshot = await getDocs(collection(db, "activities"));
 
-snapshot.forEach((doc) => {
-const data = doc.data();
+snapshot.forEach((activityDoc) => {
+const data = activityDoc.data();
 
+```
 const div = document.createElement("div");
 div.className = "activity";
 
-div.innerHTML = `
-<label>
-<input type="radio" name="activity" value="${doc.id}">
-${data.name}
-</label>
-`;
+const radio = document.createElement("input");
+radio.type = "radio";
+radio.name = "activity";
+radio.value = activityDoc.id;
 
+const label = document.createElement("label");
+label.appendChild(radio);
+label.append(" " + data.name);
+
+div.appendChild(label);
 activitiesDiv.appendChild(div);
+```
+
 });
 
 statusDiv.textContent = "Choisis une activité puis vote.";
