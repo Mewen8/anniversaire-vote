@@ -67,31 +67,30 @@ voteForm.addEventListener("submit", async (e) => {
     return;
   }
 
-  try {
-    console.log("AVANT ENREGISTREMENT");
+try {
+  console.log("AVANT ENREGISTREMENT");
 
-    await addDoc(collection(db, "votes"), {
-      activity: selected.value,
-      createdAt: Date.now()
-    });
+  await addDoc(collection(db, "votes"), {
+    activity: selected.value,
+    createdAt: Date.now()
+  });
 
-    console.log("APRÈS ENREGISTREMENT");
+  console.log("APRÈS ENREGISTREMENT");
 
-    messageDiv.textContent =
-      "✅ Ton vote a bien été enregistré !";
+  messageDiv.textContent =
+    "✅ Ton vote a bien été enregistré !";
 
-    statusDiv.textContent = "";
+  statusDiv.textContent = "";
 
-    activitiesDiv.style.display = "none";
-    document.getElementById("voteButton").style.display = "none";
+  activitiesDiv.style.display = "none";
+  document.getElementById("voteButton").style.display = "none";
 
-    console.log("MESSAGE AJOUTÉ");
-  } catch (error) {
-    console.error(error);
+} catch (error) {
+  console.error(error);
 
-    messageDiv.textContent =
-      "❌ Erreur lors de l'enregistrement du vote.";
-  }
+  messageDiv.textContent =
+    "❌ Erreur lors de l'enregistrement du vote.";
+}
 });
 
 loadActivities();
