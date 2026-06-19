@@ -52,7 +52,7 @@ async function loadActivities() {
     activitiesDiv.appendChild(div);
   });
 
-  statusDiv.textContent = "";
+  statusDiv.textContent = "Choisis une activité puis vote.";
 }
 
 voteForm.addEventListener("submit", async (e) => {
