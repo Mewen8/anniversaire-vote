@@ -1,21 +1,21 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc
+getFirestore,
+collection,
+getDocs,
+addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 console.log("APP JS CHARGÉ");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
-  authDomain: "activites-anniversaire.firebaseapp.com",
-  projectId: "activites-anniversaire",
-  storageBucket: "activites-anniversaire.firebasestorage.app",
-  messagingSenderId: "613450740235",
-  appId: "1:613450740235:web:c8c0d071afa6a045598d0e"
+apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
+authDomain: "activites-anniversaire.firebaseapp.com",
+projectId: "activites-anniversaire",
+storageBucket: "activites-anniversaire.firebasestorage.app",
+messagingSenderId: "613450740235",
+appId: "1:613450740235:web:c8c0d071afa6a045598d0e"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -27,69 +27,78 @@ const voteForm = document.getElementById("voteForm");
 const messageDiv = document.getElementById("message");
 
 async function loadActivities() {
-  activitiesDiv.innerHTML = "";
+activitiesDiv.innerHTML = "";
 
-  const snapshot = await getDocs(collection(db, "activities"));
+const snapshot = await getDocs(collection(db, "activities"));
 
-  snapshot.forEach((activityDoc) => {
-    const data = activityDoc.data();
+snapshot.forEach((activityDoc) => {
+const data = activityDoc.data();
 
-    const div = document.createElement("div");
-    div.className = "activity";
+```
+const div = document.createElement("div");
+div.className = "activity";
 
-    const radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = "activity";
-    radio.value = activityDoc.id;
+const radio = document.createElement("input");
+radio.type = "radio";
+radio.name = "activity";
+radio.value = activityDoc.id;
 
-    const label = document.createElement("label");
-    label.appendChild(radio);
-    label.appendChild(
-      document.createTextNode(" " + data.name)
-    );
+const label = document.createElement("label");
+label.appendChild(radio);
+label.appendChild(document.createTextNode(" " + data.name));
 
-    div.appendChild(label);
-    activitiesDiv.appendChild(div);
-  });
+div.appendChild(label);
+activitiesDiv.appendChild(div);
+```
 
-  statusDiv.textContent = "Choisis une activité puis vote.";
+});
+
+statusDiv.textContent = "Choisis une activité puis vote.";
 }
 
 voteForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+e.preventDefault();
 
-  const selected = document.querySelector(
-    'input[name="activity"]:checked'
-  );
+const selected = document.querySelector(
+'input[name="activity"]:checked'
+);
 
-  if (!selected) {
-    alert("Choisis une activité.");
-    return;
-  }
+if (!selected) {
+alert("Choisis une activité.");
+return;
+}
 
 try {
-  console.log("AVANT ENREGISTREMENT");
+await addDoc(collection(db, "votes"), {
+activity: selected.value,
+createdAt: Date.now()
+});
 
-  await addDoc(collection(db, "votes"), {
-    activity: selected.value,
-    createdAt: Date.now()
-  });
+```
+messageDiv.textContent =
+  "✅ Ton vote a bien été enregistré !";
 
-  console.log("APRÈS ENREGISTREMENT");
+statusDiv.textContent = "";
 
-  messageDiv.textContent =
-    "✅ Ton vote a bien été enregistré !";
+activitiesDiv.style.display = "none";
 
-  statusDiv.textContent = "";
+const voteButton =
+  document.getElementById("voteButton");
 
-  activitiesDiv.style.display = "none";
-  document.getElementById("voteButton").style.display = "none";
+if (voteButton) {
+  voteButton.style.display = "none";
+}
+```
 
 } catch (error) {
-  console.error(error);
+console.error(error);
 
-  messageDiv.textContent =
-    "❌ Erreur lors de l'enregistrement du vote.";
+```
+messageDiv.textContent =
+  "❌ Erreur lors de l'enregistrement du vote.";
+```
+
 }
 });
+
 loadActivities();
