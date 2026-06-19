@@ -78,7 +78,7 @@ voteForm.addEventListener("submit", async (e) => {
 
 messageDiv.textContent =
   "✅ Ton vote a bien été enregistré !";
-    
+ console.log("MESSAGE AJOUTÉ");   
 statusDiv.textContent = "";
     
 activitiesDiv.style.display = "none";
