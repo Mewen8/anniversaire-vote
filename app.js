@@ -79,7 +79,8 @@ messageDiv.textContent =
     
 statusDiv.textContent = "";
     
-voteForm.style.display = "none";
+activitiesDiv.style.display = "none";
+document.getElementById("voteButton").style.display = "none";
   } catch (error) {
     console.error(error);
 
