@@ -91,6 +91,5 @@ try {
   messageDiv.textContent =
     "❌ Erreur lors de l'enregistrement du vote.";
 }
-});
 
 loadActivities();
