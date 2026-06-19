@@ -73,11 +73,12 @@ voteForm.addEventListener("submit", async (e) => {
       createdAt: Date.now()
     });
 
-  alert("Vote enregistré avec succès !");
 
 messageDiv.textContent =
   "✅ Ton vote a bien été enregistré !";
-
+    
+statusDiv.textContent = "";
+    
 voteForm.style.display = "none";
   } catch (error) {
     console.error(error);
