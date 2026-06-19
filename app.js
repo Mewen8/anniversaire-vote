@@ -1,4 +1,3 @@
-console.log("APP JS CHARGÉ");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
@@ -7,6 +6,8 @@ import {
   getDocs,
   addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+console.log("APP JS CHARGÉ");
 
 const firebaseConfig = {
   apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
@@ -42,11 +43,10 @@ async function loadActivities() {
     radio.value = activityDoc.id;
 
     const label = document.createElement("label");
-
-    const text = document.createTextNode(" " + data.name);
-
     label.appendChild(radio);
-    label.appendChild(text);
+    label.appendChild(
+      document.createTextNode(" " + data.name)
+    );
 
     div.appendChild(label);
     activitiesDiv.appendChild(div);
@@ -69,24 +69,27 @@ voteForm.addEventListener("submit", async (e) => {
 
   try {
     console.log("AVANT ENREGISTREMENT");
+
     await addDoc(collection(db, "votes"), {
-    console.log("APRÈS ENREGISTREMENT");
       activity: selected.value,
       createdAt: Date.now()
     });
 
+    console.log("APRÈS ENREGISTREMENT");
 
-messageDiv.textContent =
-  "✅ Ton vote a bien été enregistré !";
- console.log("MESSAGE AJOUTÉ");   
-statusDiv.textContent = "";
-    
-activitiesDiv.style.display = "none";
-document.getElementById("voteButton").style.display = "none";
+    messageDiv.textContent =
+      "✅ Ton vote a bien été enregistré !";
+
+    statusDiv.textContent = "";
+
+    activitiesDiv.style.display = "none";
+    document.getElementById("voteButton").style.display = "none";
+
+    console.log("MESSAGE AJOUTÉ");
   } catch (error) {
     console.error(error);
 
-    messageDiv.innerHTML =
+    messageDiv.textContent =
       "❌ Erreur lors de l'enregistrement du vote.";
   }
 });
