@@ -73,5 +73,23 @@ button {
     font-size: 28px;
     font-weight: bold;
     text-align: center;
+
+.poster-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff8dc;
+    border: 3px dashed #f4b942;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.poster-box h3 {
+    margin-top: 0;
+}
+
+.poster-box p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
     margin: 20px 0;
 }
