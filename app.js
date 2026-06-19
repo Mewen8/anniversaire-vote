@@ -68,7 +68,9 @@ voteForm.addEventListener("submit", async (e) => {
   }
 
   try {
+    console.log("AVANT ENREGISTREMENT");
     await addDoc(collection(db, "votes"), {
+    console.log("APRÈS ENREGISTREMENT");
       activity: selected.value,
       createdAt: Date.now()
     });
