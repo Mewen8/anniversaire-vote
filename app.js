@@ -6,7 +6,8 @@ import {
   getDocs,
   addDoc,
   doc,
-  getDoc
+  getDoc,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 console.log("APP JS CHARGÉ");
 
@@ -108,60 +109,46 @@ messageDiv.textContent =
 }
 });
 
-async function checkVoteStatus() {
+const voteDocRef = doc(db, "config", "vote");
 
-  console.log("CHECK DÉMARRÉ");
+onSnapshot(voteDocRef, (voteDoc) => {
+  console.log("LIVE UPDATE vote config");
 
-  if (alreadyVoted === "true") {
+  if (!voteDoc.exists()) {
+    statusDiv.textContent = "❌ Document config/vote introuvable";
+    return;
+  }
 
-  statusDiv.textContent =
-    "✅ Tu as déjà participé au vote.";
+  const voteActive = voteDoc.data().active;
 
-  activitiesDiv.style.display = "none";
+  console.log("ACTIVE =", voteActive);
 
-  document.getElementById("voteButton")
-    .style.display = "none";
+  // si déjà voté → priorité absolue
+  if (localStorage.getItem("alreadyVoted") === "true") {
+    statusDiv.textContent = "✅ Tu as déjà participé au vote.";
+    activitiesDiv.style.display = "none";
+    const btn = document.getElementById("voteButton");
+    if (btn) btn.style.display = "none";
+    return;
+  }
 
-  return;
-}
-  try {
+  if (!voteActive) {
+    statusDiv.textContent = "⏸️ Aucun vote en cours.";
+    activitiesDiv.style.display = "none";
 
-    const voteDoc = await getDoc(
-      doc(db, "config", "vote")
-    );
+    const btn = document.getElementById("voteButton");
+    if (btn) btn.style.display = "none";
+  } else {
+    statusDiv.textContent = "🟢 Vote ouvert ! Choisis une activité.";
 
-    console.log("DOCUMENT :", voteDoc.exists());
-    console.log("DONNÉES :", voteDoc.data());
+    activitiesDiv.style.display = "block";
 
-    if (!voteDoc.exists()) {
-      statusDiv.textContent =
-        "❌ Document config/vote introuvable";
-      return;
-    }
+    const btn = document.getElementById("voteButton");
+    if (btn) btn.style.display = "block";
 
-    const voteActive = voteDoc.data().active;
-
-    console.log("ACTIVE =", voteActive);
-
-    if (!voteActive) {
-
-      statusDiv.textContent =
-        "⏸️ Aucun vote en cours.";
-
-      activitiesDiv.style.display = "none";
-
-      document.getElementById("voteButton")
-        .style.display = "none";
-
-    } else {
-
-      activitiesDiv.style.display = "block";
-
-      document.getElementById("voteButton")
-        .style.display = "block";
-
-      loadActivities();
-    }
+    loadActivities();
+  }
+});
 
   } catch (error) {
 
