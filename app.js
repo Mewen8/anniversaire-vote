@@ -26,6 +26,8 @@ const activitiesDiv = document.getElementById("activities");
 const statusDiv = document.getElementById("status");
 const voteForm = document.getElementById("voteForm");
 const messageDiv = document.getElementById("message");
+const alreadyVoted =
+  localStorage.getItem("alreadyVoted");
 
 async function loadActivities() {
 activitiesDiv.innerHTML = "";
@@ -74,7 +76,11 @@ await addDoc(collection(db, "votes"), {
 activity: selected.value,
 createdAt: Date.now()
 });
-
+  
+localStorage.setItem(
+  "alreadyVoted",
+  "true"
+);
 
 messageDiv.textContent =
   "✅ Ton vote a bien été enregistré !";
@@ -106,6 +112,18 @@ async function checkVoteStatus() {
 
   console.log("CHECK DÉMARRÉ");
 
+  if (alreadyVoted === "true") {
+
+  statusDiv.textContent =
+    "✅ Tu as déjà participé au vote.";
+
+  activitiesDiv.style.display = "none";
+
+  document.getElementById("voteButton")
+    .style.display = "none";
+
+  return;
+}
   try {
 
     const voteDoc = await getDoc(
