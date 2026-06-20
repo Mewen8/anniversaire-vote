@@ -119,36 +119,38 @@ onSnapshot(voteDocRef, (voteDoc) => {
     return;
   }
 
-  const voteActive = voteDoc.data().active;
+ const voteActive = voteDoc.data().active;
 
-  console.log("ACTIVE =", voteActive);
+// vote fermé → on reset visuel
+if (!voteActive) {
+  statusDiv.textContent = "⏸️ Aucun vote en cours.";
+  activitiesDiv.style.display = "none";
 
-  // priorité si déjà voté
-  if (localStorage.getItem("alreadyVoted") === "true") {
-    statusDiv.textContent = "✅ Tu as déjà participé au vote.";
-    activitiesDiv.style.display = "none";
+  const btn = document.getElementById("voteButton");
+  if (btn) btn.style.display = "none";
 
-    const btn = document.getElementById("voteButton");
-    if (btn) btn.style.display = "none";
+  return;
+}
 
-    return;
-  }
+// vote ouvert + déjà voté
+if (localStorage.getItem("alreadyVoted") === "true") {
+  statusDiv.textContent = "✅ Tu as déjà participé au vote.";
+  activitiesDiv.style.display = "none";
 
-  if (!voteActive) {
-    statusDiv.textContent = "⏸️ Aucun vote en cours.";
-    activitiesDiv.style.display = "none";
+  const btn = document.getElementById("voteButton");
+  if (btn) btn.style.display = "none";
 
-    const btn = document.getElementById("voteButton");
-    if (btn) btn.style.display = "none";
-  } else {
-    statusDiv.textContent = "🟢 Vote ouvert ! Choisis une activité.";
+  return;
+}
 
-    activitiesDiv.style.display = "block";
+// vote ouvert + pas voté
+statusDiv.textContent = "🟢 Vote ouvert ! Choisis une activité.";
+activitiesDiv.style.display = "block";
 
-    const btn = document.getElementById("voteButton");
-    if (btn) btn.style.display = "block";
+const btn = document.getElementById("voteButton");
+if (btn) btn.style.display = "block";
 
-    loadActivities();
+loadActivities();
   }
 });
 
