@@ -108,6 +108,25 @@ async function checkVoteStatus() {
     doc(db, "config", "vote")
   );
 
-  const vote
-  
-loadActivities();
+  const voteActive = voteDoc.data().active;
+
+  if (!voteActive) {
+
+    statusDiv.textContent =
+      "⏸️ Aucun vote en cours.";
+
+    activitiesDiv.style.display = "none";
+
+    document.getElementById("voteButton")
+      .style.display = "none";
+
+  } else {
+
+    activitiesDiv.style.display = "block";
+
+    document.getElementById("voteButton")
+      .style.display = "block";
+
+    loadActivities();
+  }
+}
