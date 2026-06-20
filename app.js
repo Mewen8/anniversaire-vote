@@ -104,30 +104,51 @@ messageDiv.textContent =
 
 async function checkVoteStatus() {
 
-  const voteDoc = await getDoc(
-    doc(db, "config", "vote")
-  );
+  try {
 
-  const voteActive = voteDoc.data().active;
+    const voteDoc = await getDoc(
+      doc(db, "config", "vote")
+    );
 
-  if (!voteActive) {
+    console.log("DOCUMENT :", voteDoc.exists());
+    console.log("DONNÉES :", voteDoc.data());
+
+    if (!voteDoc.exists()) {
+      statusDiv.textContent =
+        "❌ Document config/vote introuvable";
+      return;
+    }
+
+    const voteActive = voteDoc.data().active;
+
+    console.log("ACTIVE =", voteActive);
+
+    if (!voteActive) {
+
+      statusDiv.textContent =
+        "⏸️ Aucun vote en cours.";
+
+      activitiesDiv.style.display = "none";
+
+      document.getElementById("voteButton")
+        .style.display = "none";
+
+    } else {
+
+      activitiesDiv.style.display = "block";
+
+      document.getElementById("voteButton")
+        .style.display = "block";
+
+      loadActivities();
+    }
+
+  } catch (error) {
+
+    console.error("ERREUR CHECK:", error);
 
     statusDiv.textContent =
-      "⏸️ Aucun vote en cours.";
-
-    activitiesDiv.style.display = "none";
-
-    document.getElementById("voteButton")
-      .style.display = "none";
-
-  } else {
-
-    activitiesDiv.style.display = "block";
-
-    document.getElementById("voteButton")
-      .style.display = "block";
-
-    loadActivities();
+      "❌ Erreur Firebase";
   }
 }
 
