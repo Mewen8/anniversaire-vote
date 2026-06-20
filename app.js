@@ -139,6 +139,7 @@ voteId = data.voteId;
   }
 
   statusDiv.textContent = "🟢 Vote ouvert ! Choisis une activité.";
+  messageDiv.textContent = "";
   activitiesDiv.style.display = "block";
 
   const btn = document.getElementById("voteButton");
