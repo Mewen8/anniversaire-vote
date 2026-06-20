@@ -50,6 +50,7 @@ await getDocs(collection(db, "votes"));
 
 const voteConfig = await getDoc(voteRef);
 const currentVoteId = voteConfig.data().voteId;
+console.log("Vote actuel :", currentVoteId);
   
 const activityNames = {};
 
@@ -63,6 +64,8 @@ const counts = {};
 votesSnapshot.forEach((voteDoc) => {
 
   const voteData = voteDoc.data();
+
+   console.log("Vote trouvé :", voteData);
 
   if (voteData.voteId !== currentVoteId) {
     return;
