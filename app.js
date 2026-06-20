@@ -159,6 +159,3 @@ onSnapshot(voteDocRef, (voteDoc) => {
   }
 }
 
-console.log("AVANT CHECK");
-checkVoteStatus();
-console.log("APRÈS CHECK");
