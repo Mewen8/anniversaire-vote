@@ -36,7 +36,6 @@ async function loadActivities() {
   activitiesDiv.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "activities"));
-
   snapshot.forEach((activityDoc) => {
     const data = activityDoc.data();
 
