@@ -57,13 +57,13 @@ const counts = {};
 
 votesSnapshot.forEach((voteDoc) => {
 
-```
+
 const activity =
   voteDoc.data().activity;
 
 counts[activity] =
   (counts[activity] || 0) + 1;
-```
+
 
 });
 
@@ -71,14 +71,14 @@ let html = "";
 
 for (const id in counts) {
 
-```
+
 html +=
   "<p><strong>" +
   activityNames[id] +
   "</strong> : " +
   counts[id] +
   " vote(s)</p>";
-```
+
 
 }
 
