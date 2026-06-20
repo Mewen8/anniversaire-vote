@@ -4,10 +4,8 @@ import {
 getFirestore,
 collection,
 getDocs,
-getDoc,
 doc,
-updateDoc,
-deleteDoc
+updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -24,30 +22,18 @@ const db = getFirestore(app);
 
 const resultsDiv = document.getElementById("results");
 
-document
-.getElementById("startVote")
-.addEventListener("click", async () => {
-
-await updateDoc(
-doc(db, "config", "vote"),
-{
+document.getElementById("startVote").addEventListener("click", async () => {
+await updateDoc(doc(db, "config", "vote"), {
 active: true
-}
-);
+});
 
 alert("Vote lancé !");
 });
 
-document
-.getElementById("endVote")
-.addEventListener("click", async () => {
-
-await updateDoc(
-doc(db, "config", "vote"),
-{
+document.getElementById("endVote").addEventListener("click", async () => {
+await updateDoc(doc(db, "config", "vote"), {
 active: false
-}
-);
+});
 
 alert("Vote terminé !");
 });
@@ -62,9 +48,9 @@ await getDocs(collection(db, "votes"));
 
 const activityNames = {};
 
-activitiesSnapshot.forEach((docSnap) => {
-activityNames[docSnap.id] =
-docSnap.data().name;
+activitiesSnapshot.forEach((activityDoc) => {
+activityNames[activityDoc.id] =
+activityDoc.data().name;
 });
 
 const counts = {};
@@ -83,7 +69,7 @@ counts[activity] =
 
 let html = "";
 
-Object.keys(counts).forEach((id) => {
+for (const id in counts) {
 
 ```
 html +=
@@ -94,7 +80,7 @@ html +=
   " vote(s)</p>";
 ```
 
-});
+}
 
 resultsDiv.innerHTML = html;
 }
