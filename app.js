@@ -1,156 +1,146 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import {
   getFirestore,
   collection,
   getDocs,
   addDoc,
   doc,
-  getDoc,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 console.log("APP JS CHARGÉ");
 
 const firebaseConfig = {
-apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
-authDomain: "activites-anniversaire.firebaseapp.com",
-projectId: "activites-anniversaire",
-storageBucket: "activites-anniversaire.firebasestorage.app",
-messagingSenderId: "613450740235",
-appId: "1:613450740235:web:c8c0d071afa6a045598d0e"
+  apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
+  authDomain: "activites-anniversaire.firebaseapp.com",
+  projectId: "activites-anniversaire",
+  storageBucket: "activites-anniversaire.firebasestorage.app",
+  messagingSenderId: "613450740235",
+  appId: "1:613450740235:web:c8c0d071afa6a045598d0e"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+/* ELEMENTS */
 const activitiesDiv = document.getElementById("activities");
 const statusDiv = document.getElementById("status");
 const voteForm = document.getElementById("voteForm");
 const messageDiv = document.getElementById("message");
-const alreadyVoted =
-  localStorage.getItem("alreadyVoted");
 
+/* STATE */
+let voteActive = false;
+
+/* LOAD ACTIVITIES */
 async function loadActivities() {
-activitiesDiv.innerHTML = "";
+  activitiesDiv.innerHTML = "";
 
-const snapshot = await getDocs(collection(db, "activities"));
+  const snapshot = await getDocs(collection(db, "activities"));
 
-snapshot.forEach((activityDoc) => {
-const data = activityDoc.data();
+  snapshot.forEach((activityDoc) => {
+    const data = activityDoc.data();
 
+    const div = document.createElement("div");
+    div.className = "activity";
 
-const div = document.createElement("div");
-div.className = "activity";
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "activity";
+    radio.value = activityDoc.id;
 
-const radio = document.createElement("input");
-radio.type = "radio";
-radio.name = "activity";
-radio.value = activityDoc.id;
+    const label = document.createElement("label");
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(" " + data.name));
 
-const label = document.createElement("label");
-label.appendChild(radio);
-label.appendChild(document.createTextNode(" " + data.name));
+    div.appendChild(label);
+    activitiesDiv.appendChild(div);
+  });
 
-div.appendChild(label);
-activitiesDiv.appendChild(div);
-
-
-});
-
-statusDiv.textContent = "Choisis une activité puis vote.";
+  statusDiv.textContent = "Choisis une activité puis vote.";
 }
 
+/* SUBMIT VOTE */
 voteForm.addEventListener("submit", async (e) => {
-e.preventDefault();
+  e.preventDefault();
 
-const selected = document.querySelector(
-'input[name="activity"]:checked'
-);
+  const selected = document.querySelector('input[name="activity"]:checked');
 
-if (!selected) {
-alert("Choisis une activité.");
-return;
-}
-
-try {
-await addDoc(collection(db, "votes"), {
-activity: selected.value,
-createdAt: Date.now()
-});
-  
-localStorage.setItem(
-  "alreadyVoted",
-  "true"
-);
-
-messageDiv.textContent =
-  "✅ Ton vote a bien été enregistré !";
-
-statusDiv.textContent = "";
-
-activitiesDiv.style.display = "none";
-
-const voteButton =
-  document.getElementById("voteButton");
-
-if (voteButton) {
-  voteButton.style.display = "none";
-}
-
-
-} catch (error) {
-console.error(error);
-
-
-messageDiv.textContent =
-  "❌ Erreur lors de l'enregistrement du vote.";
-
-
-}
-});
-
-const voteDocRef = doc(db, "config", "vote");
-
-onSnapshot(voteDocRef, (voteDoc) => {
-  console.log("LIVE UPDATE vote config");
-
-  if (!voteDoc.exists()) {
-    statusDiv.textContent = "❌ Document config/vote introuvable";
+  if (!selected) {
+    alert("Choisis une activité.");
     return;
   }
 
- const voteActive = voteDoc.data().active;
+  if (!voteActive) {
+    alert("Le vote est fermé.");
+    return;
+  }
 
-// vote fermé → on reset visuel
-if (!voteActive) {
-  statusDiv.textContent = "⏸️ Aucun vote en cours.";
-  activitiesDiv.style.display = "none";
+  if (localStorage.getItem("alreadyVoted") === "true") {
+    alert("Tu as déjà voté.");
+    return;
+  }
 
-  const btn = document.getElementById("voteButton");
-  if (btn) btn.style.display = "none";
+  try {
+    await addDoc(collection(db, "votes"), {
+      activity: selected.value,
+      createdAt: Date.now()
+    });
 
-  return;
-}
+    localStorage.setItem("alreadyVoted", "true");
 
-// vote ouvert + déjà voté
-if (localStorage.getItem("alreadyVoted") === "true") {
-  statusDiv.textContent = "✅ Tu as déjà participé au vote.";
-  activitiesDiv.style.display = "none";
+    messageDiv.textContent = "✅ Ton vote a bien été enregistré !";
+    activitiesDiv.style.display = "none";
+    statusDiv.textContent = "";
 
-  const btn = document.getElementById("voteButton");
-  if (btn) btn.style.display = "none";
+    const btn = document.getElementById("voteButton");
+    if (btn) btn.style.display = "none";
 
-  return;
-}
-
-// vote ouvert + pas voté
-statusDiv.textContent = "🟢 Vote ouvert ! Choisis une activité.";
-activitiesDiv.style.display = "block";
-
-const btn = document.getElementById("voteButton");
-if (btn) btn.style.display = "block";
-
-loadActivities();
+  } catch (error) {
+    console.error(error);
+    messageDiv.textContent = "❌ Erreur lors de l'enregistrement du vote.";
   }
 });
 
+/* LIVE LISTENER FIRESTORE */
+const voteDocRef = doc(db, "config", "vote");
+
+onSnapshot(voteDocRef, (voteDoc) => {
+  console.log("LIVE UPDATE");
+
+  if (!voteDoc.exists()) {
+    statusDiv.textContent = "❌ config/vote introuvable";
+    return;
+  }
+
+  voteActive = voteDoc.data().active;
+
+  const hasVoted = localStorage.getItem("alreadyVoted") === "true";
+
+  if (!voteActive) {
+    statusDiv.textContent = "⏸️ Aucun vote en cours.";
+    activitiesDiv.style.display = "none";
+
+    const btn = document.getElementById("voteButton");
+    if (btn) btn.style.display = "none";
+
+    return;
+  }
+
+  if (hasVoted) {
+    statusDiv.textContent = "✅ Tu as déjà participé au vote.";
+    activitiesDiv.style.display = "none";
+
+    const btn = document.getElementById("voteButton");
+    if (btn) btn.style.display = "none";
+
+    return;
+  }
+
+  statusDiv.textContent = "🟢 Vote ouvert ! Choisis une activité.";
+  activitiesDiv.style.display = "block";
+
+  const btn = document.getElementById("voteButton");
+  if (btn) btn.style.display = "block";
+
+  loadActivities();
+});
