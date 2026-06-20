@@ -82,6 +82,7 @@ voteForm.addEventListener("submit", async (e) => {
   try {
     await addDoc(collection(db, "votes"), {
       activity: selected.value,
+      voteId: voteId,
       createdAt: Date.now()
     });
 
@@ -116,7 +117,7 @@ onSnapshot(voteDocRef, (voteDoc) => {
 voteActive = data.active;
 voteId = data.voteId; 
   
-  const hasVoted = localStorage.getItem("alreadyVoted") === "true";
+const hasVoted = localStorage.getItem("vote_" + voteId) === "true";
 
   if (!voteActive) {
     statusDiv.textContent = "⏸️ Aucun vote en cours.";
