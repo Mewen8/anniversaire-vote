@@ -1,12 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getFirestore,
-collection,
-getDocs,
-addDoc
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 console.log("APP JS CHARGÉ");
 
 const firebaseConfig = {
@@ -101,4 +102,12 @@ messageDiv.textContent =
 }
 });
 
+async function checkVoteStatus() {
+
+  const voteDoc = await getDoc(
+    doc(db, "config", "vote")
+  );
+
+  const vote
+  
 loadActivities();
