@@ -104,6 +104,8 @@ messageDiv.textContent =
 
 async function checkVoteStatus() {
 
+  console.log("CHECK DÉMARRÉ");
+
   try {
 
     const voteDoc = await getDoc(
@@ -152,4 +154,6 @@ async function checkVoteStatus() {
   }
 }
 
+console.log("AVANT CHECK");
 checkVoteStatus();
+console.log("APRÈS CHECK");
