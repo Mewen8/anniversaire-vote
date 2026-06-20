@@ -146,11 +146,11 @@ onSnapshot(voteDocRef, (voteDoc) => {
     const btn = document.getElementById("voteButton");
     if (btn) btn.style.display = "block";
 
-    loadActivities();
+   loadActivities();
   }
 });
 
-  } catch (error) {
+  catch (error) {
 
     console.error("ERREUR CHECK:", error);
 
