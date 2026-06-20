@@ -130,3 +130,5 @@ async function checkVoteStatus() {
     loadActivities();
   }
 }
+
+checkVoteStatus();
