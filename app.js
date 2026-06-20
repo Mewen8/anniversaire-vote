@@ -123,12 +123,14 @@ onSnapshot(voteDocRef, (voteDoc) => {
 
   console.log("ACTIVE =", voteActive);
 
-  // si déjà voté → priorité absolue
+  // priorité si déjà voté
   if (localStorage.getItem("alreadyVoted") === "true") {
     statusDiv.textContent = "✅ Tu as déjà participé au vote.";
     activitiesDiv.style.display = "none";
+
     const btn = document.getElementById("voteButton");
     if (btn) btn.style.display = "none";
+
     return;
   }
 
@@ -146,16 +148,7 @@ onSnapshot(voteDocRef, (voteDoc) => {
     const btn = document.getElementById("voteButton");
     if (btn) btn.style.display = "block";
 
-   loadActivities();
+    loadActivities();
   }
 });
-
-  catch (error) {
-
-    console.error("ERREUR CHECK:", error);
-
-    statusDiv.textContent =
-      "❌ Erreur Firebase";
-  }
-}
 
