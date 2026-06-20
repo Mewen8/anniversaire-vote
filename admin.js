@@ -1,41 +1,41 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import {
-getFirestore,
-collection,
-getDocs,
-doc,
-updateDoc
+  getFirestore,
+  doc,
+  updateDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
-authDomain: "activites-anniversaire.firebaseapp.com",
-projectId: "activites-anniversaire",
-storageBucket: "activites-anniversaire.firebasestorage.app",
-messagingSenderId: "613450740235",
-appId: "1:613450740235:web:c8c0d071afa6a045598d0e"
-};
+const app = initializeApp({
+  apiKey: "AIzaSyBYgyM1epQ9up8195FarX7gBnli1LQs2_U",
+  authDomain: "activites-anniversaire.firebaseapp.com",
+  projectId: "activites-anniversaire",
+});
 
-const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const voteRef = doc(db, "config", "vote");
 
-const resultsDiv = document.getElementById("results");
-
+/* LANCER VOTE */
 document.getElementById("startVote").addEventListener("click", async () => {
-await updateDoc(doc(db, "config", "vote"), {
-active: true
+  const snap = await getDoc(voteRef);
+  const current = snap.data().voteId || 0;
+
+  await updateDoc(voteRef, {
+    active: true,
+    voteId: current + 1
+  });
+
+  alert("Vote lancé !");
 });
 
-alert("Vote lancé !");
-});
-
+/* STOP VOTE */
 document.getElementById("endVote").addEventListener("click", async () => {
-await updateDoc(doc(db, "config", "vote"), {
-active: false
-});
+  await updateDoc(voteRef, {
+    active: false
+  });
 
-alert("Vote terminé !");
+  alert("Vote terminé !");
+});
 });
 
 async function showResults() {
