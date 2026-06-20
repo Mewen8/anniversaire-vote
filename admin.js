@@ -3,7 +3,9 @@ import {
   getFirestore,
   doc,
   updateDoc,
-  getDoc
+  getDoc,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp({
@@ -14,6 +16,7 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 const voteRef = doc(db, "config", "vote");
+const resultsDiv = document.getElementById("results");
 
 /* LANCER VOTE */
 document.getElementById("startVote").addEventListener("click", async () => {
