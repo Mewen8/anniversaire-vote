@@ -36,7 +36,6 @@ document.getElementById("endVote").addEventListener("click", async () => {
 
   alert("Vote terminé !");
 });
-});
 
 async function showResults() {
 
