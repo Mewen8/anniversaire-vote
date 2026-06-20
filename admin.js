@@ -48,6 +48,9 @@ await getDocs(collection(db, "activities"));
 const votesSnapshot =
 await getDocs(collection(db, "votes"));
 
+const voteConfig = await getDoc(voteRef);
+const currentVoteId = voteConfig.data().voteId;
+  
 const activityNames = {};
 
 activitiesSnapshot.forEach((activityDoc) => {
@@ -59,13 +62,16 @@ const counts = {};
 
 votesSnapshot.forEach((voteDoc) => {
 
+  const voteData = voteDoc.data();
 
-const activity =
-  voteDoc.data().activity;
+  if (voteData.voteId !== currentVoteId) {
+    return;
+  }
 
-counts[activity] =
-  (counts[activity] || 0) + 1;
+  const activity = voteData.activity;
 
+  counts[activity] =
+    (counts[activity] || 0) + 1;
 
 });
 
