@@ -27,7 +27,7 @@ const activitiesDiv = document.getElementById("activities");
 const statusDiv = document.getElementById("status");
 const voteForm = document.getElementById("voteForm");
 const messageDiv = document.getElementById("message");
-
+let voteId = null;
 /* STATE */
 let voteActive = false;
 
@@ -75,7 +75,7 @@ voteForm.addEventListener("submit", async (e) => {
     return;
   }
 
-  if (localStorage.getItem("alreadyVoted") === "true") {
+  if (localStorage.getItem("vote_" + voteId) === "true") {
     alert("Tu as déjà voté.");
     return;
   }
@@ -86,8 +86,8 @@ voteForm.addEventListener("submit", async (e) => {
       createdAt: Date.now()
     });
 
-    localStorage.setItem("alreadyVoted", "true");
-
+    localStorage.setItem("vote_" + voteId, "true")
+    
     messageDiv.textContent = "✅ Ton vote a bien été enregistré !";
     activitiesDiv.style.display = "none";
     statusDiv.textContent = "";
@@ -112,8 +112,11 @@ onSnapshot(voteDocRef, (voteDoc) => {
     return;
   }
 
-  voteActive = voteDoc.data().active;
+ const data = voteDoc.data();
 
+voteActive = data.active;
+voteId = data.voteId; 
+  
   const hasVoted = localStorage.getItem("alreadyVoted") === "true";
 
   if (!voteActive) {
