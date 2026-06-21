@@ -129,3 +129,23 @@ document
 
     showResults();
 });
+
+document
+  .getElementById("resetActivities")
+  .addEventListener("click", async () => {
+
+    const snapshot =
+      await getDocs(collection(db, "activities"));
+
+    for (const activityDoc of snapshot.docs) {
+
+      await updateDoc(
+        doc(db, "activities", activityDoc.id),
+        {
+          active: true
+        }
+      );
+    }
+
+    alert("Toutes les activités ont été réactivées.");
+});
