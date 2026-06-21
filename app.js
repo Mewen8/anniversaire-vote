@@ -43,7 +43,6 @@ async function loadActivities() {
   if (data.active === false) {
     return;
   }
-    const data = activityDoc.data();
 
     const div = document.createElement("div");
     div.className = "activity";
