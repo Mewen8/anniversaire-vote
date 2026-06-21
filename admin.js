@@ -5,7 +5,8 @@ import {
   updateDoc,
   getDoc,
   collection,
-  getDocs
+  getDocs,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp({
@@ -17,7 +18,7 @@ const app = initializeApp({
 const db = getFirestore(app);
 const voteRef = doc(db, "config", "vote");
 const resultsDiv = document.getElementById("results");
-
+let currentWinnerId = null;
 /* LANCER VOTE */
 document.getElementById("startVote").addEventListener("click", async () => {
   const snap = await getDoc(voteRef);
@@ -96,6 +97,36 @@ html +=
 resultsDiv.innerHTML = html;
 }
 
-showResults();
+showResults(if (counts[id] > maxVotes) {
+  maxVotes = counts[id];
+  winnerId = id;
+  currentWinnerId = id;
+});
 
 setInterval(showResults, 5000);
+
+document
+  .getElementById("removeWinner")
+  .addEventListener("click", async () => {
+
+    if (!currentWinnerId) {
+      alert("Aucun gagnant disponible.");
+      return;
+    }
+
+    const confirmation = confirm(
+      "Supprimer l'activité gagnante ?"
+    );
+
+    if (!confirmation) {
+      return;
+    }
+
+    await deleteDoc(
+      doc(db, "activities", currentWinnerId)
+    );
+
+    alert("Activité supprimée.");
+
+    showResults();
+});
