@@ -98,7 +98,7 @@ async function showResults() {
 
   resultsDiv.innerHTML = html;
 }
-
+showResults();
 setInterval(showResults, 5000);
 
 document
