@@ -118,9 +118,12 @@ document
       return;
     }
 
-    await deleteDoc(
-      doc(db, "activities", currentWinnerId)
-    );
+   await updateDoc(
+  doc(db, "activities", currentWinnerId),
+  {
+    active: false
+  }
+);
 
     alert("Activité supprimée.");
 
