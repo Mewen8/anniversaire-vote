@@ -43,65 +43,61 @@ document.getElementById("endVote").addEventListener("click", async () => {
 
 async function showResults() {
 
-const activitiesSnapshot =
-await getDocs(collection(db, "activities"));
+  const activitiesSnapshot =
+    await getDocs(collection(db, "activities"));
 
-const votesSnapshot =
-await getDocs(collection(db, "votes"));
+  const votesSnapshot =
+    await getDocs(collection(db, "votes"));
 
-const voteConfig = await getDoc(voteRef);
-const currentVoteId = voteConfig.data().voteId;
-console.log("Vote actuel :", currentVoteId);
-  
-const activityNames = {};
+  const voteConfig = await getDoc(voteRef);
+  const currentVoteId = voteConfig.data().voteId;
 
-activitiesSnapshot.forEach((activityDoc) => {
-activityNames[activityDoc.id] =
-activityDoc.data().name;
-});
+  const activityNames = {};
 
-const counts = {};
+  activitiesSnapshot.forEach((activityDoc) => {
+    activityNames[activityDoc.id] =
+      activityDoc.data().name;
+  });
 
-votesSnapshot.forEach((voteDoc) => {
+  const counts = {};
 
-  const voteData = voteDoc.data();
+  votesSnapshot.forEach((voteDoc) => {
 
-   console.log("Vote trouvé :", voteData);
+    const voteData = voteDoc.data();
 
-  if (voteData.voteId !== currentVoteId) {
-    return;
+    if (voteData.voteId !== currentVoteId) {
+      return;
+    }
+
+    const activity = voteData.activity;
+
+    counts[activity] =
+      (counts[activity] || 0) + 1;
+  });
+
+  let html = "";
+
+  let winnerId = null;
+  let maxVotes = 0;
+
+  for (const id in counts) {
+
+    html +=
+      "<p><strong>" +
+      activityNames[id] +
+      "</strong> : " +
+      counts[id] +
+      " vote(s)</p>";
+
+    if (counts[id] > maxVotes) {
+      maxVotes = counts[id];
+      winnerId = id;
+      currentWinnerId = id;
+    }
   }
 
-  const activity = voteData.activity;
-
-  counts[activity] =
-    (counts[activity] || 0) + 1;
-
-});
-
-let html = "";
-
-for (const id in counts) {
-
-
-html +=
-  "<p><strong>" +
-  activityNames[id] +
-  "</strong> : " +
-  counts[id] +
-  " vote(s)</p>";
-
-
+  resultsDiv.innerHTML = html;
 }
-
-resultsDiv.innerHTML = html;
-}
-
-showResults(if (counts[id] > maxVotes) {
-  maxVotes = counts[id];
-  winnerId = id;
-  currentWinnerId = id;
-});
 
 setInterval(showResults, 5000);
 
