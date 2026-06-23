@@ -105,3 +105,8 @@ button {
     background-color: #d4edda;
     color: #155724;
 }
+#status {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
